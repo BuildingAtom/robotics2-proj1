@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<launch>
+    <!-- This file sets up and launches the core components for the simulation of the robot -->
+    <include file="$(find proj1robot_gazebo)/launch/proj1.launch"/>
+    <include file="$(find proj1robot_description)/launch/proj1robot_spawn.launch"/>
+    <node name="drive_twist_middleman" pkg="drive_twist_middleman" type="drive_twist_middleman.py"/>
+</launch>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+    <param name="robot_description" command="$(find proj1robot_description)/urdf/proj1robot.urdf" />
+
+    <!-- initial position arguments -->
+    <arg name="x" default="0"/>
+    <arg name="y" default="2"/>
+    <arg name="yaw" default="-1.5708"/>
+    <param name="/simulation/spawn_mean_gauss" type="yaml" value="[$(arg x), $(arg y), $(arg yaw)]"/>
+
+    <!-- initial position noise arguments -->
+    <arg name="xdev" default="0.1"/>
+    <arg name="ydev" default="0.1"/>
+    <arg name="yawdev" default="0.05"/>
+    <param name="/simulation/spawn_stddev_gauss" type="yaml" value="[$(arg xdev), $(arg ydev), $(arg yawdev)]"/>
+
+    <!-- spawn the model -->
+    <node name="proj1robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
+          args="-urdf -param robot_description -model proj1robot"/>
+    <!-- randomize the start -->
+    <node name="proj1robot_randomize" pkg="proj1robot_description" type="scripts/generate_random_position.py"/>
+</launch>

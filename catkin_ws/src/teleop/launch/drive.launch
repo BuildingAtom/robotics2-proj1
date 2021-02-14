@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<launch>
+    <include file="$(find teleop)/launch/base.launch"/>
+    <node name="simple_twist_controller" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"
+          args="cmd_vel:=/controller/drive"/>
+</launch>
