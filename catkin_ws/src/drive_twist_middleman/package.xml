@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>drive_twist_middleman</name>
+  <version>0.0.0</version>
+  <description>A middleman that listen subscribes to the /controller/drive topic and publishes to the /robot/cmd_vel topic. It takes two values, forward and turning velocities, and peturbs them as defined using Gaussian random variables before publishing using /geometry_msgs/Twist.</description>
+
+  <maintainer email="lia4@rpi.edu">Adam Li</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+    <!-- -->
+  </export>
+</package>

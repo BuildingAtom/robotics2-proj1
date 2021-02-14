@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>proj1robot_description</name>
+  <version>0.0.0</version>
+  <description>The proj1robot_description package, describing the simple 2-wheeled mobile robot used.</description>
+  <maintainer email="adam@todo.todo">Adam Li</maintainer>
+
+  <license>TODO</license>
+
+  <!-- Dependencies -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <export>
+    <!-- -->
+  </export>
+</package>
