@@ -2,5 +2,7 @@
 <launch>
     <include file="$(find teleop)/launch/base.launch"/>
     <node name="simple_twist_controller" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"
-          args="cmd_vel:=/controller/drive"/>
+          launch-prefix="bash -c 'sleep 2.0; $0 $@'" >
+        <remap from="cmd_vel" to="/controller/drive"/>
+    </node>
 </launch>

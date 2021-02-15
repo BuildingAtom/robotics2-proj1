@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-    <param name="robot_description" command="$(find proj1robot_description)/urdf/proj1robot.urdf" />
+    <param name="robot_description" textfile="$(find proj1robot_description)/urdf/proj1robot.urdf" />
 
     <!-- initial position arguments -->
     <arg name="x" default="0"/>
@@ -17,6 +17,6 @@
     <!-- spawn the model -->
     <node name="proj1robot_spawn" pkg="gazebo_ros" type="spawn_model" output="screen"
           args="-urdf -param robot_description -model proj1robot"/>
-    <!-- randomize the start -->
-    <node name="proj1robot_randomize" pkg="proj1robot_description" type="scripts/generate_random_position.py"/>
+    <!-- randomize the start (delay by 2 seconds to allow the model to load) -->
+    <node name="proj1robot_randomize" pkg="proj1robot_description" type="generate_random_position.py" launch-prefix="bash -c 'sleep 2.0; $0 $@'"/>
 </launch>

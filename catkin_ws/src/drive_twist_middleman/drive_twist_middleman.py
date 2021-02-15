@@ -13,7 +13,9 @@ def callback_relay(in_msg):
     # many controllers appear to use x for the forward direction, but the robot has y as the forward direction based on project spec
     fwd = in_msg.linear.x
     turn = in_msg.angular.z
-    
+
+    fwd_noise = 0.0
+    turn_noise = 0.0
     # generate noise if any nonzero input
     if fwd or turn:
         fwd_noise = random.gauss(forward_gaussian[0], forward_gaussian[1])
@@ -29,10 +31,12 @@ def callback_relay(in_msg):
 
 def drive_twist_middleman():
     global pub, forward_gaussian, turn_gaussian
+
+    rospy.init_node('drive_twist_middleman')
     
     # get the random noise
-    forward_gaussian = rospy.get_param('/simulation/forward_gaussian', [0.0, 0.05])
-    turn_gaussian = rospy.get_param('/simulation/turn_gaussian', [0.0, 0.05])
+    forward_gaussian = rospy.get_param('/simulation/forward_gaussian', [0.0, 0.2])
+    turn_gaussian = rospy.get_param('/simulation/turn_gaussian', [0.0, 0.2])
 
     # get what to publish to and what to subscribe to
     pubto = rospy.get_param('/simulation/drive_mm_out', '/robot/cmd_vel')
