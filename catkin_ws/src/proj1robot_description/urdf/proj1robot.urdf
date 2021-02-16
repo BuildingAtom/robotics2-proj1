@@ -188,68 +188,6 @@
         <frameName>laser_link</frameName>
       </plugin>
     </sensor>
-    <!-- left -->
-    <sensor type="ray" name="laser_proximity_sensor_left">
-      <visualize>false</visualize>
-      <update_rate>20</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <!-- get 140 points spanning the 35 degree -->
-            <samples>140</samples>
-            <resolution>1</resolution>
-            <min_angle>-1.876229</min_angle>
-            <max_angle>-1.265364</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>2.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <!-- it's just going to be noisier -->
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.03</stddev>
-        </noise>
-      </ray>
-      <plugin name="laser_proximity_sensor_left" filename="libgazebo_ros_laser.so">
-        <topicName>/robot/proximity_left_raw</topicName>
-        <frameName>laser_link</frameName>
-      </plugin>
-    </sensor>
-    <!-- right -->
-    <sensor type="ray" name="laser_proximity_sensor_right">
-      <visualize>false</visualize>
-      <update_rate>20</update_rate>
-      <ray>
-        <scan>
-          <horizontal>
-            <!-- get 140 points spanning the 35 degree -->
-            <samples>140</samples>
-            <resolution>1</resolution>
-            <min_angle>1.265364</min_angle>
-            <max_angle>1.876229</max_angle>
-          </horizontal>
-        </scan>
-        <range>
-          <min>0.10</min>
-          <max>2.0</max>
-          <resolution>0.01</resolution>
-        </range>
-        <!-- it's just going to be noisier -->
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.03</stddev>
-        </noise>
-      </ray>
-      <plugin name="laser_proximity_sensor_right" filename="libgazebo_ros_laser.so">
-        <topicName>/robot/proximity_right_raw</topicName>
-        <frameName>laser_link</frameName>
-      </plugin>
-    </sensor>
   </gazebo>
 
   <!-- Camera -->

@@ -4,4 +4,10 @@
     <include file="$(find proj1robot_gazebo)/launch/proj1.launch"/>
     <include file="$(find proj1robot_description)/launch/proj1robot_spawn.launch"/>
     <node name="drive_twist_middleman" pkg="drive_twist_middleman" type="drive_twist_middleman.py"/>
+    <!-- Add some simulated sensors -->
+    <node name="proximity_middleman" pkg="proximity_middleman" type="proximity_middleman.py">
+        <remap from="proximity_raw" to="/robot/proximity_front_raw"/>
+        <remap from="proximity" to="/robot/proximity_front"/>
+    </node>
+    <node name="local_gps" pkg="local_gps" type="local_gps.py"/>
 </launch>
