@@ -13,6 +13,8 @@ from gazebo_msgs.msg import ModelState
 from gazebo_msgs.srv import GetModelState
 
 
+beacon = Point()
+
 # Calculate the distance between two points
 def euclidean_norm(p1, p2):
     x = p1.x - p2.x
@@ -23,15 +25,13 @@ def euclidean_norm(p1, p2):
 
 # generate the local gps data based on the model state
 def calc_pos_and_publish():
-    global pub, gps_gaussian
+    global pub, gps_gaussian, get_model_state, beacon
     
     # get the position of the robot model
     try:
-        get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
-        model_state = get_model_state('proj1robot')
+        model_state = get_model_state('proj1robot','')
         # remember, the model origin is 0.2 towards the rear of the geometric center.
         
-        beacon = Point()
         beacon.x = 0
         beacon.y = 0
         beacon.z = 4
@@ -64,12 +64,12 @@ def calc_pos_and_publish():
 
 
 def local_gps():
-    global pub, gps_gaussian
+    global pub, gps_gaussian, get_model_state
 
     rospy.init_node('local_gps')
     
-    # get the rate
-    rate = rospy.get_param('/simulation/gps_rate', 30)
+    # get the rate (it's a slow gps)
+    rate = rospy.get_param('/simulation/gps_rate', 5)
     
     # get the random noise (it scales with distance. this is noise at 1m)
     gps_gaussian = rospy.get_param('/simulation/gps_gaussian', [0.0, 0.05])
@@ -82,13 +82,26 @@ def local_gps():
     pub = rospy.Publisher('/robot/gps', GPS, queue_size=10)
     
     rospy.wait_for_service('/gazebo/get_model_state')
+    model_exists = False
+    while not model_exists:
+        try:
+            get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
+            get_model_state('proj1robot','')
+            model_exists = True
+        except rospy.ServiceException as e:
+            print("Service call failed: %s, robot may not have been spawned yet"%e)
+        time.sleep(1)
     
     # start running at rate 
     next = time.time()
     while True:
         calc_pos_and_publish()
         next = next + 1.0/rate
-        time.sleep(next-time.time())
+        try:
+            time.sleep(next-time.time())
+        except:
+            # if timing is off, just skip
+            pass
     
     #keep the process alive
     rospy.spin()

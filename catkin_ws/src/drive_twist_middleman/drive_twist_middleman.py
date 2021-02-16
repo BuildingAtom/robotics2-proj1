@@ -2,6 +2,8 @@
 # todo: license here
 
 import random
+import threading
+import time
 
 import rospy
 from geometry_msgs.msg import Twist
@@ -30,11 +32,11 @@ def drive_twist_middleman():
     rospy.init_node('drive_twist_middleman')
     
     # get the rate
-    rate = rospy.get_param('/simulation/drive_rate', 30)
+    rate = rospy.get_param('/simulation/drive_rate', 20)
     
     # get the random noise
-    forward_gaussian = rospy.get_param('/simulation/forward_gaussian', [0.0, 0.05])
-    turn_gaussian = rospy.get_param('/simulation/turn_gaussian', [0.0, 0.05])
+    forward_gaussian = rospy.get_param('/simulation/forward_gaussian', [0.0, 0.2])
+    turn_gaussian = rospy.get_param('/simulation/turn_gaussian', [0.0, 0.2])
 
     # get what to publish to and what to subscribe to
     pubto = rospy.get_param('/simulation/drive_mm_out', '/robot/cmd_vel')
@@ -64,10 +66,10 @@ def drive_twist_middleman():
 
         fwd_noise = 0.0
         turn_noise = 0.0
-        # generate noise if any nonzero input, divide by rate to make sure gaussian applies properly to unit velocity
+        # generate noise if any nonzero input
         if fwd or turn:
-            fwd_noise = random.gauss(forward_gaussian[0], forward_gaussian[1])/rate
-            turn_noise = random.gauss(turn_gaussian[0], turn_gaussian[1])/rate
+            fwd_noise = random.gauss(forward_gaussian[0], forward_gaussian[1])
+            turn_noise = random.gauss(turn_gaussian[0], turn_gaussian[1])
         
         # update and publish the message with noise
         msg.linear.y = local_fwd + fwd_noise
@@ -77,7 +79,11 @@ def drive_twist_middleman():
         
         # delay
         next = next + 1.0/rate
-        time.sleep(next-time.time())
+        try:
+            time.sleep(next-time.time())
+        except:
+            # if timing is off, just skip
+            pass
 
 
 if __name__ == '__main__':

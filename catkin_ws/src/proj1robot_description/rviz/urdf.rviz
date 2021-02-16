@@ -11,6 +11,7 @@ Panels:
         - /TF1
         - /LaserScan1
         - /Image1
+        - /Range1
       Splitter Ratio: 0.5
     Tree Height: 494
   - Class: rviz/Selection
@@ -122,15 +123,16 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
+        base_footprint:
+          base_link:
+            camera_link:
+              {}
+            imu_link:
+              {}
+            laser_link:
+              {}
         proj1robot_odom:
-          base_footprint:
-            base_link:
-              camera_link:
-                {}
-              imu_link:
-                {}
-              laser_link:
-                {}
+          {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -173,6 +175,16 @@ Visualization Manager:
       Normalize Range: true
       Queue Size: 2
       Transport Hint: raw
+      Unreliable: false
+      Value: true
+    - Alpha: 0.5
+      Buffer Length: 1
+      Class: rviz/Range
+      Color: 255; 255; 255
+      Enabled: true
+      Name: Range
+      Queue Size: 10
+      Topic: /robot/proximity_front
       Unreliable: false
       Value: true
   Enabled: true
@@ -241,5 +253,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1216
-  X: 64
-  Y: 0
+  X: 0
+  Y: 13
