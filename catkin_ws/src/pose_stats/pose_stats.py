@@ -3,6 +3,8 @@
 
 import threading
 import time
+import sys
+import math
 
 import pickle
 import matplotlib.pyplot as plt
@@ -35,8 +37,8 @@ def callback_all(in_msg):
 
     # get the current robot state
     ground_truth = get_model_state('proj1robot','')
-    rot = quat_rot(model_state.pose.orientation.w, model_state.pose.orientation.z)
-    state['ground_truth'].append([model_state.pose.position.x, model_state.pose.position.y, rot])
+    rot = quat_rot([ground_truth.pose.orientation.w, ground_truth.pose.orientation.z])
+    state['ground_truth'].append([ground_truth.pose.position.x, ground_truth.pose.position.y, rot])
 
 
 #callbacks
@@ -73,44 +75,49 @@ def publish_pose():
     global state
 
     # publish every second
+    # delay for a second
+    time.sleep(1)
     next = time.time()
     while True:
+        next = next + 1.0
         # for each list, get the numpy representation
         gt = np.array(state['ground_truth'])
-        true_x = gt[:,1]
-        true_y = gt[:,2]
-        true_theta = gt[:,3]
+        true_x = gt[:,0]
+        true_y = gt[:,1]
+        true_theta = gt[:,2]
         
         i = 1
-        for k,v in state.items:
+        for k,v in state.items():
             if k == 'ground_truth':
                 continue
             
             #retrieve the values
             st = np.array(v)
-            x = st[:,1]
+            x = st[:,0]
             y = st[:,1]
-            theta = st[:,1]
+            theta = st[:,2]
+        
+            #print("MSE for " + k, ((gt-st)**2).mean(axis=0))
             
             #plot and label the ground_truth
             plt.figure(i)
             plt.clf()
             plt.plot(true_x, 'b')
             # label the final number
-            plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+            plt.annotate('%0.2f' % true_x[-1], xy=(1, true_x[-1]), xytext=(8, 0),
                          xycoords=('axes fraction', 'data'), textcoords='offset points')
             plt.plot(true_y, 'r')
             # label the final number
-            plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+            plt.annotate('%0.2f' % true_y[-1], xy=(1, true_y[-1]), xytext=(8, 0),
                          xycoords=('axes fraction', 'data'), textcoords='offset points')
             plt.plot(true_theta, 'g')
             # label the final number
-            plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+            plt.annotate('%0.2f' % true_theta[-1], xy=(1, true_theta[-1]), xytext=(8, 0),
                          xycoords=('axes fraction', 'data'), textcoords='offset points')
             #plot the results from this estimate
-            plt.plot(x, 'b-')
-            plt.plot(y, 'r-')
-            plt.plot(theta, 'g-')
+            plt.plot(x, 'b:')
+            plt.plot(y, 'r:')
+            plt.plot(theta, 'g:')
             plt.legend(['True X', 'True Y', 'True Theta', 'Predicted X', 'Predicted Y', 'Predicted Theta'])
             plt.ylabel('Position (m) / Z-rotation (rad)')
             plt.xlabel('Time')
@@ -120,7 +127,6 @@ def publish_pose():
             #increment figure
             i = i + 1
         
-        next = next + 1.0
         try:
             time.sleep(next-time.time())
         except:
@@ -146,58 +152,66 @@ def pose_stats(duration):
     get_model_state = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
 
     # start a thread to display all the visualizations
-    visThread = threading.Thread(target=publish_pose)
-    visThread.daemon = True
-    visThread.start()
+    #visThread = threading.Thread(target=publish_pose)
+    #visThread.daemon = True
+    #visThread.start()
+    #rosrun doesn't display anything, so I'm ignoring this for now
 
     # sleep until kill
-    exit = time.time() + duration
-    time.sleep(exit-time.time())
-    for sub in subscriber
+    exit_time = time.time() + int(duration)
+    time.sleep(exit_time-time.time())
+    for sub in subscriber:
         sub.unregister()
     
+    print("finishing!")
+
     #save the visualizations
     #and dump the stats locally
     # for each list, get the numpy representation
     gt = np.array(state['ground_truth'])
-    true_x = gt[:,1]
-    true_y = gt[:,2]
-    true_theta = gt[:,3]
+    true_x = gt[:,0]
+    true_y = gt[:,1]
+    true_theta = gt[:,2]
     np.savetxt('ground_truth.csv', gt, delimiter=",")
     
     i = 1
-    for k,v in state.items:
+    for k,v in state.items():
         if k == 'ground_truth':
             continue
         
         #retrieve the values
         st = np.array(v)
-        x = st[:,1]
+        x = st[:,0]
         y = st[:,1]
-        theta = st[:,1]
+        theta = st[:,2]
         np.savetxt(k+'.csv', st, delimiter=",")
         
-        print("MSE for " + k, ((gt-st)**2).mean(axis=0))
+        if y.shape[0] > true_y.shape[0]:
+            length = true_y.shape[0]
+        else:
+            length = y.shape[0]
+
+        print("MSE for " + k, ((gt[0:length,:]-st[0:length,:])**2).mean(axis=0))
         
         #plot and label the ground_truth
         plt.figure(i)
         plt.clf()
         plt.plot(true_x, 'b')
         # label the final number
-        plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+        plt.annotate('%0.2f' % true_x[-1], xy=(1, true_x[-1]), xytext=(8, 0),
                      xycoords=('axes fraction', 'data'), textcoords='offset points')
         plt.plot(true_y, 'r')
         # label the final number
-        plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+        plt.annotate('%0.2f' % true_y[-1], xy=(1, true_y[-1]), xytext=(8, 0),
                      xycoords=('axes fraction', 'data'), textcoords='offset points')
         plt.plot(true_theta, 'g')
         # label the final number
-        plt.annotate('%0.2f' % e_k[-1], xy=(1, e_k[-1]), xytext=(8, 0),
+        plt.annotate('%0.2f' % true_theta[-1], xy=(1, true_theta[-1]), xytext=(8, 0),
                      xycoords=('axes fraction', 'data'), textcoords='offset points')
         #plot the results from this estimate
-        plt.plot(x, 'b-')
-        plt.plot(y, 'r-')
-        plt.plot(theta, 'g-')
+        plt.plot(x, 'b:')
+        plt.plot(y, 'r:')
+        plt.plot(theta, 'g:')
         plt.legend(['True X', 'True Y', 'True Theta', 'Predicted X', 'Predicted Y', 'Predicted Theta'])
         plt.ylabel('Position (m) / Z-rotation (rad)')
         plt.xlabel('Time')
@@ -209,7 +223,7 @@ def pose_stats(duration):
     
     #dump the raw stats locally
     filehandler = open("states.pkl", "wb")
-    pickle.dump(state)
+    pickle.dump(state, filehandler)
     filehandler.close()
 
     # leave it running so the user can see the end stats (mse)
