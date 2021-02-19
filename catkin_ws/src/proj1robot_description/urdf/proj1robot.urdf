@@ -97,7 +97,7 @@
         <topicName>/robot/imu</topicName>
         <bodyName>imu_link</bodyName>
         <updateRateHZ>10.0</updateRateHZ>
-        <gaussianNoise>0.0</gaussianNoise>
+        <gaussianNoise>0.05</gaussianNoise>
         <xyzOffset>0 0 0</xyzOffset>
         <rpyOffset>0 0 0</rpyOffset>
         <frameName>imu_link</frameName>
@@ -129,7 +129,7 @@
   <gazebo reference="laser_link">
     <sensor type="ray" name="laser_hokuyo_sensor">
       <visualize>false</visualize>
-      <update_rate>20</update_rate>
+      <update_rate>5</update_rate>
       <ray>
         <scan>
           <horizontal>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pose_est</name>
+  <version>0.0.0</version>
+  <description>Takes sensor data and outputs to '/robot/pose_est'. Listens for odometry data on 'odom', imu data on 'imu', and gps data on 'gps'.</description>
+
+  <maintainer email="lia4@rpi.edu">Adam Li</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>proj1robot_gazebo</exec_depend>
+  <build_depend>proj1robot_msgs</build_depend>
+  <exec_depend>proj1robot_msgs</exec_depend>
+
+  <export>
+    <!-- -->
+  </export>
+</package>

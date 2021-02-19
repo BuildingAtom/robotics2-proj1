@@ -46,6 +46,8 @@ find_package(catkin REQUIRED message_generation std_msgs)
 add_message_files(
   FILES
   GPS.msg
+  Pose.msg
+  ControlInput.msg
 )
 
 ## Generate services in the 'srv' folder

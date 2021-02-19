@@ -10,6 +10,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>proj1robot_gazebo</exec_depend>
+  <build_depend>proj1robot_msgs</build_depend>
+  <exec_depend>proj1robot_msgs</exec_depend>
 
   <export>
     <!-- -->
