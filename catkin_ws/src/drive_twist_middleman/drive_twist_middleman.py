@@ -65,6 +65,9 @@ def drive_twist_middleman():
             msg_raw.turn = turn
             state_changed = False
 
+        #time
+        msg_raw.header.stamp = rospy.Time.now()
+
         # generate noise based on input
         fwd_noise = random.gauss(forward_gaussian[0], forward_gaussian[1]) * msg_raw.forward
         turn_noise = random.gauss(turn_gaussian[0], turn_gaussian[1]) * msg_raw.turn

@@ -8,4 +8,4 @@ float64 y           # y position in world frame in meters (inf if N/A)
 float64 theta       # theta orientation in world frame in radians (inf if N/A)
 
 # Row-major 3x3 covariance of the x, y, and theta.
-float64[9]　covariance
+#float64[9]　covariance

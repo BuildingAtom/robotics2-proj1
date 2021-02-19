@@ -10,4 +10,14 @@
         <remap from="proximity" to="/robot/proximity_front"/>
     </node>
     <node name="local_gps" pkg="local_gps" type="local_gps.py"/>
+
+    <!-- start pose estimation, give some time for everything to set up -->
+    <!-- removed from launch script because it crashes. Run separately with rosrun pose_est pose_est.py cmd_vel:=/robot/cmd_vel_raw odom:=/robot/move_odom imu:=/robot/imu gps:=/robot/gps -->
+    <!--<node name="pose_est" pkg="pose_est" type="pose_est.py"
+          launch-prefix="bash -c 'sleep 5.0; $0 $@'" >
+        <remap from="cmd_vel" to="/robot/cmd_vel_raw"/>
+        <remap from="odom" to="/robot/move_odom"/>
+        <remap from="imu" to="/robot/imu"/>
+        <remap from="gps" to="/robot/gps"/>
+    </node>-->
 </launch>
