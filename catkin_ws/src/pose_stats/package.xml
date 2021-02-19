@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>pose_stats</name>
+  <version>0.0.0</version>
+  <description>Collects data from the pose estimator messages (/robot/pose_est, pose_dr_est, pose_dr_imu_est, pose_dr_all_est, pose_gps_est), and queries the gazebo service for the current robot state for the specified time, and exports it into various charts.</description>
+
+  <maintainer email="lia4@rpi.edu">Adam Li</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>proj1robot_gazebo</exec_depend>
+  <build_depend>proj1robot_msgs</build_depend>
+  <exec_depend>proj1robot_msgs</exec_depend>
+
+  <export>
+    <!-- -->
+  </export>
+</package>
