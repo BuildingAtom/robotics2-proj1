@@ -216,7 +216,7 @@ def pose_stats(duration):
         plt.ylabel('Position (m) / Z-rotation (rad)')
         plt.xlabel('Time')
         plt.title('Pose Estimation using ' + k)
-        plt.savefig("vis\\"+k+".png")
+        plt.savefig("vis\/"+k+".png")
         plt.draw()
         #increment figure
         i = i + 1
